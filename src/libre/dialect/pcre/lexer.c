@@ -400,7 +400,7 @@ z3(struct lx_pcre_lx *lx)
 		S40, S41, S42, S43, S44, S45, S46, S47, S48, S49, 
 		S50, S51, S52, S53, S54, S55, S56, S57, S58, S59, 
 		S60, S61, S62, S63, S64, S65, S66, S67, S68, S69, 
-		S70, S71, S72, S73, NONE
+		S70, S71, S72, NONE
 	} state;
 
 	assert(lx != NULL);
@@ -865,7 +865,7 @@ z3(struct lx_pcre_lx *lx)
 			case '6':
 			case '7':
 			case '8':
-			case '9': state = S73; break;
+			case '9': break;
 			default:  lx_pcre_ungetc(lx, c); return TOK_UNSUPPORTED;
 			}
 			break;
@@ -1066,22 +1066,6 @@ z3(struct lx_pcre_lx *lx)
 			}
 			break;
 
-		case S73: /* e.g. "\\10" */
-			switch ((unsigned char) c) {
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9': break;
-			default:  lx_pcre_ungetc(lx, c); return TOK_UNSUPPORTED;
-			}
-			break;
-
 		default:
 			; /* unreached */
 		}
@@ -1127,7 +1111,6 @@ z3(struct lx_pcre_lx *lx)
 	case S68: return TOK_OCT;
 	case S70: return TOK_HEX;
 	case S71: return TOK_HEX;
-	case S73: return TOK_UNSUPPORTED;
 	default: errno = EINVAL; return TOK_ERROR;
 	}
 }
