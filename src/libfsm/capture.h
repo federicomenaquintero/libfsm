@@ -11,7 +11,7 @@
 
 /* Capture interface -- functions internal to libfsm.
  * The public interface should not depend on any of these details. */
-
+/* Keep in sync with capture.rs:ActionType */
 enum capture_action_type {
 	/* Start an active capture if transitioning to TO. */
 	CAPTURE_ACTION_START,

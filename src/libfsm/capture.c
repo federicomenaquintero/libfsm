@@ -336,6 +336,10 @@ add_capture_action(struct fsm *fsm, struct fsm_capture_info *ci,
 			assert(fsm->states[state].has_capture_actions);
 			assert(ci->max_capture_id >= action->id);
 			return 1;
+                } else if (b->state == state &&
+		    0 != cmp_action(action, &b->action)) {
+                        fprintf(stderr, "capture collision!\n");
+                        exit(1);
 		} else {
 			continue; /* skip past collision */
 		}
