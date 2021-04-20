@@ -46,6 +46,18 @@ fsm_capture_free(struct fsm *fsm)
 	fsm->capture_info = NULL;
 }
 
+/* Callback used from fsm_countcaptures() */
+static int
+check_max_capture_id_cb(fsm_state_t state,
+    enum capture_action_type type, unsigned capture_id, fsm_state_t to,
+    void *opaque)
+{
+        struct fsm_capture_info *ci = opaque;
+
+        assert(ci->max_capture_id >= capture_id);
+        return 1;
+}
+
 unsigned
 fsm_countcaptures(const struct fsm *fsm)
 {
@@ -59,17 +71,7 @@ fsm_countcaptures(const struct fsm *fsm)
 
 	/* check actual */
 #if EXPENSIVE_CHECKS
-	{
-		struct fsm_capture_info *ci = fsm->capture_info;
-		size_t i;
-		for (i = 0; i < ci->bucket_count; i++) {
-			struct fsm_capture_action_bucket *b = &ci->buckets[i];
-			if (b->state == CAPTURE_NO_STATE) { /* empty */
-				continue;
-			}
-			assert(ci->max_capture_id >= b->action.id);
-		}
-	}
+        fsm_capture_action_iter(fsm, check_max_capture_id_cb, fsm->capture_info);
 #endif
 
 	return fsm->capture_info->max_capture_id + 1;
